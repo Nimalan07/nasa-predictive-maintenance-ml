@@ -15,16 +15,19 @@ def home():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = request.get_json()
-    df = pd.DataFrame([data])
+    try:
+        data = request.get_json()
+        df = pd.DataFrame([data])
+        
+        pred = model.predict(df)[0]
+        prob = model.predict_proba(df)[0][1]
+        
+        return jsonify({
+            "prediction": int(pred),
+            "probability": float(prob)
+        })
     
-    pred = model.predict(df)[0]
-    prob = model.predict_proba(df)[0][1]
-    
-    return jsonify({
-        "prediction": int(pred),
-        "probability": float(prob)
-    })
-
+    except Exception as e:
+        return jsonify({"error": str(e)})
 if __name__ == "__main__":
     app.run(debug=True)
