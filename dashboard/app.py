@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import os
 
-MODEL_PATH = "models/model.pkl"
+MODEL_PATH = os.path.join("models", "model.pkl")
 
 st.set_page_config(page_title="Predictive Maintenance", layout="wide")
 
