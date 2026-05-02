@@ -11,7 +11,6 @@ st.title("🔧 Predictive Maintenance Dashboard")
 
 model = pickle.load(open(MODEL_PATH, "rb"))
 
-# ✅ session state init
 if "df" not in st.session_state:
     st.session_state.df = None
 
@@ -25,12 +24,10 @@ def color_risk(val):
     else:
         return "background-color: lightgreen"
 
-# ✅ load file once
 if uploaded_file and st.session_state.df is None:
     df = pd.read_csv(uploaded_file)
     st.session_state.df = df
 
-# ✅ run prediction OR reuse stored data
 if st.session_state.df is not None:
 
     df = st.session_state.df
@@ -50,7 +47,6 @@ if st.session_state.df is not None:
 
             st.session_state.df = df
 
-    # ✅ only show dashboard after prediction
     if "prediction" in df.columns:
 
         st.subheader("📈 Predictions Overview")
