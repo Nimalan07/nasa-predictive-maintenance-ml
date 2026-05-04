@@ -32,9 +32,6 @@ predictive-maintenance-ml/
 │ ├── raw/ # Original NASA dataset
 │ └── processed/ # Cleaned and feature-engineered data
 │
-├── notebooks/
-│ └── eda.ipynb # Exploratory Data Analysis
-│
 ├── src/
 │ ├── data_preprocessing.py # Data cleaning + RUL creation
 │ ├── train_model.py # Model training
@@ -63,7 +60,6 @@ predictive-maintenance-ml/
 - Docker
 
 ---
-
 ## 🚀 How to Run
 
 ###  Option 1: Run Locally
@@ -72,8 +68,45 @@ pip install -r requirements.txt
 streamlit run dashboard/app.py
 
 ### Option 2: Run with Docker
-docker build -t predictive-maintenance .
+``` docker build -t predictive-maintenance .
 docker run -p 8501:8501 predictive-maintenance
-
+```
 Then open:
 http://localhost:8501
+
+---
+### 📈 Dashboard Features
+- Upload dataset
+- Predict failure probability
+- View risky machines
+- Engine-level analysis
+- Failure trend visualization
+---
+### 🧠 Machine Learning Approach
+- Remaining Useful Life (RUL) calculation
+- Classification based on failure threshold
+- Model: XGBoost
+- Metrics: Precision, PR-AUC
+---
+### 💡 Key Insight
+
+- The model predicts increasing failure probability as the machine approaches end-of-life cycles.
+---
+### 📦 Deployment
+- Containerized using Docker
+- Can be deployed on:
+  - Streamlit Cloud
+  - Render
+  - AWS / GCP
+---
+### 📌 Future Improvements
+- SHAP explainability
+- Real-time IoT data streaming
+- Multi-engine comparison dashboard
+---
+## 👨‍💻 Author
+NIMALAN MANI M
+
+---
+## ⭐ If you like this project
+Give it a star ⭐ on GitHub
