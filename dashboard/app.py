@@ -100,6 +100,21 @@ if st.session_state.df is not None:
 
         st.subheader("📋 Recent Engine Data")
         st.dataframe(engine_df.tail(20))
+        st.subheader("📊 Feature Importance")
 
+        feature_names = model.get_booster().feature_names
+        importance = model.feature_importances_
+   
+        min_len = min(len(feature_names), len(importance))
+
+        importance_df = pd.DataFrame({
+            "feature": feature_names[:min_len],
+            "importance": importance[:min_len]
+        }).sort_values("importance", ascending=False)
+
+        st.write("🔝 Top Important Features")
+        st.dataframe(importance_df.head(10))
+
+        st.bar_chart(importance_df.set_index("feature"))
         st.subheader("📊 Full Dataset (No Styling)")
         st.dataframe(df)
