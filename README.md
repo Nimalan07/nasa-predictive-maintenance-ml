@@ -63,10 +63,10 @@ predictive-maintenance-ml/
 ## 🚀 How to Run
 
 ###  Option 1: Run Locally
-
+```
 pip install -r requirements.txt
 streamlit run dashboard/app.py
-
+```
 ### Option 2: Run with Docker
 ``` docker build -t predictive-maintenance .
 docker run -p 8501:8501 predictive-maintenance
