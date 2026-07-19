@@ -42,22 +42,17 @@ def load_models():
             reg = pickle.load(f)
     return clf, reg
 
-import time
-
 def compute_all_metrics(clf, reg, X_test, y_test_clf, y_test_reg):
     metrics = {}
 
-    start_time = time.perf_counter()
     if clf is not None:
         y_pred_clf = clf.predict(X_test)
         y_prob_clf = clf.predict_proba(X_test)[:, 1]
 
-        f1_val = float(f1_score(y_test_clf, y_pred_clf))
         metrics["accuracy"] = float(accuracy_score(y_test_clf, y_pred_clf))
         metrics["precision"] = float(precision_score(y_test_clf, y_pred_clf))
         metrics["recall"] = float(recall_score(y_test_clf, y_pred_clf))
-        metrics["f1_score"] = f1_val
-        metrics["ner_f1_score"] = f1_val
+        metrics["f1_score"] = float(f1_score(y_test_clf, y_pred_clf))
         metrics["roc_auc"] = float(roc_auc_score(y_test_clf, y_prob_clf))
         metrics["pr_auc"] = float(average_precision_score(y_test_clf, y_prob_clf))
         metrics["confusion_matrix"] = confusion_matrix(y_test_clf, y_pred_clf).tolist()
@@ -69,50 +64,33 @@ def compute_all_metrics(clf, reg, X_test, y_test_clf, y_test_reg):
         metrics["mae"] = float(mean_absolute_error(y_test_reg, y_pred_reg))
         metrics["r2"] = float(r2_score(y_test_reg, y_pred_reg))
 
-    elapsed = time.perf_counter() - start_time
-    test_count = len(X_test) if X_test is not None else 0
-
-    metrics["test_document_count"] = test_count
-    metrics["supported_document_types"] = 3  # CSV Batch, JSON REST Payload, Dataframe Telemetry
-    metrics["extracted_entity_types"] = X_test.shape[1] if X_test is not None else 24
-    metrics["extracted_fields_count"] = 5  # engine_id, cycle, prediction, probability, predicted_rul
-    metrics["inference_latency_ms"] = float((elapsed / max(1, test_count)) * 1000)
-
     return metrics
 
 def print_evaluation_report(metrics):
-    print("=" * 55)
-    print("      NASA CMAPSS MODEL & SYSTEM BENCHMARK METRICS      ")
-    print("=" * 55)
+    print("=" * 50)
+    print("      NASA CMAPSS MODEL EVALUATION METRICS      ")
+    print("=" * 50)
 
-    print("\n[+] CLASSIFICATION & EXTRACTION METRICS:")
+    print("\n[+] CLASSIFICATION METRICS (Failure Prediction):")
     if "accuracy" in metrics:
-        print(f"  * Accuracy                 : {metrics['accuracy']:.4f} ({metrics['accuracy']*100:.2f}%)")
-        print(f"  * Precision                : {metrics['precision']:.4f} ({metrics['precision']*100:.2f}%)")
-        print(f"  * Recall                   : {metrics['recall']:.4f} ({metrics['recall']*100:.2f}%)")
-        print(f"  * F1-Score / NER F1-Score  : {metrics['f1_score']:.4f}")
-        print(f"  * ROC-AUC                  : {metrics['roc_auc']:.4f}")
-        print(f"  * PR-AUC                   : {metrics['pr_auc']:.4f}")
+        print(f"  * Accuracy  : {metrics['accuracy']:.4f} ({metrics['accuracy']*100:.2f}%)")
+        print(f"  * Precision : {metrics['precision']:.4f} ({metrics['precision']*100:.2f}%)")
+        print(f"  * Recall    : {metrics['recall']:.4f} ({metrics['recall']*100:.2f}%)")
+        print(f"  * F1-Score  : {metrics['f1_score']:.4f}")
+        print(f"  * ROC-AUC   : {metrics['roc_auc']:.4f}")
+        print(f"  * PR-AUC    : {metrics['pr_auc']:.4f}")
     else:
         print("  Classifier model not found.")
 
     print("\n[+] REGRESSION METRICS (RUL Cycle Prediction):")
     if "rmse" in metrics:
-        print(f"  * RMSE                     : {metrics['rmse']:.4f} cycles")
-        print(f"  * MAE                      : {metrics['mae']:.4f} cycles")
-        print(f"  * R2 Score                 : {metrics['r2']:.4f}")
+        print(f"  * RMSE      : {metrics['rmse']:.4f} cycles")
+        print(f"  * MAE       : {metrics['mae']:.4f} cycles")
+        print(f"  * R2 Score  : {metrics['r2']:.4f}")
     else:
         print("  Regressor model not found.")
 
-    print("\n[+] SYSTEM PERFORMANCE & METADATA BENCHMARKS:")
-    print(f"  * Test Document Samples    : {metrics.get('test_document_count', 0):,}")
-    print(f"  * Supported Doc/Data Types : {metrics.get('supported_document_types', 0)}")
-    print(f"  * Entity Types Extracted   : {metrics.get('extracted_entity_types', 0)} sensor features")
-    print(f"  * Fields Extracted         : {metrics.get('extracted_fields_count', 0)} output fields")
-    print(f"  * Inference Latency        : {metrics.get('inference_latency_ms', 0):.4f} ms/sample")
-
-    print("=" * 55)
-
+    print("=" * 50)
 
 
 def main():
