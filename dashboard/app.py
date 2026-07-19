@@ -94,26 +94,47 @@ if st.session_state.df is not None:
     has_reg_ground_truth = "RUL" in df.columns
 
     if has_clf_ground_truth or has_reg_ground_truth:
-        st.subheader("🎯 Dataset Model Evaluation Metrics")
+        st.subheader("🎯 Dataset Model & System Benchmark Metrics")
         try:
             from src.evaluate_model import prepare_data, compute_all_metrics
             X_train, X_test, y_train_clf, y_test_clf, y_train_reg, y_test_reg = prepare_data(df)
             metrics = compute_all_metrics(model, reg_model, X_test, y_test_clf, y_test_reg)
 
-            metric_col1, metric_col2, metric_col3, metric_col4, metric_col5 = st.columns(5)
-            with metric_col1:
+            # Row 1: ML Performance Metrics
+            st.markdown("##### 📊 Model Quality Benchmarks")
+            m1, m2, m3, m4, m5, m6, m7 = st.columns(7)
+            with m1:
                 st.metric("🎯 Accuracy", f"{metrics.get('accuracy', 0)*100:.2f}%")
-            with metric_col2:
+            with m2:
                 st.metric("🎯 Precision", f"{metrics.get('precision', 0)*100:.2f}%")
-            with metric_col3:
-                st.metric("📐 RMSE", f"{metrics.get('rmse', 0):.2f} cycles")
-            with metric_col4:
-                st.metric("📐 MAE", f"{metrics.get('mae', 0):.2f} cycles")
-            with metric_col5:
+            with m3:
+                st.metric("🎯 Recall", f"{metrics.get('recall', 0)*100:.2f}%")
+            with m4:
+                st.metric("⚡ NER F1-Score", f"{metrics.get('ner_f1_score', 0):.4f}")
+            with m5:
+                st.metric("📐 RMSE", f"{metrics.get('rmse', 0):.2f}")
+            with m6:
+                st.metric("📐 MAE", f"{metrics.get('mae', 0):.2f}")
+            with m7:
                 st.metric("📊 R² Score", f"{metrics.get('r2', 0):.4f}")
+
+            # Row 2: System Metadata & Performance Metrics
+            st.markdown("##### ⚡ System Performance & Data Extraction Benchmarks")
+            s1, s2, s3, s4, s5 = st.columns(5)
+            with s1:
+                st.metric("⏱️ Inference Latency", f"{metrics.get('inference_latency_ms', 0):.4f} ms")
+            with s2:
+                st.metric("📄 Test Documents", f"{metrics.get('test_document_count', 0):,}")
+            with s3:
+                st.metric("📋 Supported Data Types", f"{metrics.get('supported_document_types', 0)}")
+            with s4:
+                st.metric("🔍 Entity Types Extracted", f"{metrics.get('extracted_entity_types', 0)}")
+            with s5:
+                st.metric("🏷️ Fields Extracted", f"{metrics.get('extracted_fields_count', 0)}")
 
         except Exception as e:
             st.info("Custom uploaded dataset loaded. (Evaluation metrics available when target ground-truth columns are present).")
+
 
     st.markdown("---")
     st.subheader("📊 Data Preview")
