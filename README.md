@@ -82,15 +82,27 @@ http://localhost:8501
 - Engine-level analysis
 - Failure trend visualization
 ---
-### 🧠 Machine Learning Approach
-- Remaining Useful Life (RUL) calculation
-- Classification based on failure threshold
-- Model: XGBoost
-- Metrics: Precision, PR-AUC
+### 🧠 Machine Learning Approach & Benchmark Evaluation
+
+The system evaluates engine health using a dual framework:
+1. **Binary Failure Classification** (Predicting whether an engine will fail within 30 cycles)
+2. **Remaining Useful Life (RUL) Regression** (Predicting exact remaining operating cycles)
+
+#### 📊 Evaluated Metrics (Supported & Claimed):
+- **🎯 Classification Metrics (Failure Risk)**:
+  - **Accuracy**: Measure of total overall correct predictions across all healthy and failing engines.
+  - **Precision**: Ratio of true positive failures out of all predicted failures (minimizes false alarms).
+  - **Recall & F1-Score**: Evaluates true failure detection rate and overall harmonic balance.
+- **📈 Regression Metrics (RUL Forecasting)**:
+  - **RMSE (Root Mean Squared Error)**: Measures standard deviation of prediction errors in operating cycles (penalizes large errors).
+  - **MAE (Mean Absolute Error)**: Average absolute cycle difference between predicted and actual RUL.
+  - **R² Score (Coefficient of Determination)**: Proportion of variance in RUL explained by engine sensor telemetry.
+
 ---
 ### 💡 Key Insight
 
-- The model predicts increasing failure probability as the machine approaches end-of-life cycles.
+- The model predicts increasing failure probability and decreasing continuous RUL as the machine approaches end-of-life cycles.
+
 ---
 ### 📦 Deployment
 - Containerized using Docker

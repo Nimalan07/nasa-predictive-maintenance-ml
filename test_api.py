@@ -1,6 +1,6 @@
 import requests
 
-url = "http://127.0.0.1:5000/predict"
+base_url = "http://127.0.0.1:5000"
 
 data = {
     "op1": 0,
@@ -29,5 +29,10 @@ data = {
     "sensor_21": 23
 }
 
-response = requests.post(url, json=data)
-print(response.json())
+print("Testing /predict Endpoint:")
+res_pred = requests.post(f"{base_url}/predict", json=data)
+print(res_pred.json())
+
+print("\nTesting /metrics Endpoint:")
+res_metrics = requests.get(f"{base_url}/metrics")
+print(res_metrics.json())
